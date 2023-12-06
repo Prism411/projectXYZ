@@ -6,7 +6,7 @@ from PIL import Image, ImageChops
 import numpy as np
 
 # Coordenadas da região a ser capturada
-# 1920x1080
+# 1920x1080 (+6 nos y)
 # xi1, yi1, xf2, yf2 = 138, 249, 154, 265
 # 1366x768 (-6 nos y)
 #xi1, yi1, xf2, yf2 = 138, 243, 154, 259
@@ -38,7 +38,18 @@ def identificarCord(imagem, tolerancia):
         print("cancela")
 
 
+    regiao_interesse = (106, 0+6, 121, 16+6)
+    regiao_cortada = imagem.crop(regiao_interesse)
+    salvar_path = "quadradotemp3.png"
+    regiao_cortada.save(salvar_path)
+    referencia_path = "../database/traco.png"
+    if comparar_imagens(salvar_path, referencia_path, tolerancia):
+        print("beleza")
+        os.remove(salvar_path)
+    else:
+        print("cancela")
 
+    regiao_interesse = (18, 0, 34, 16)
 
 
 # faça aqui uma função que recebe uma letra e retorna os numeros para realizar crop
@@ -51,7 +62,7 @@ def obter_coordenadas_crop(letra):
     #yi_base, yf_base = 243, 259
     #xi1, yi1, xf2, yf2 = 138, 249, 154, 265
     xi_base, xf_base = 138, 249
-    yi_base, yf_base = 243, 265
+    yi_base, yf_base = 243+6, 265+6
 
 
     if letra.lower() in ('e', 'w'):
@@ -115,8 +126,7 @@ def comparar_imagens(imagem1_path, imagem2_path, tolerancia):
 
 
 def main():
-    #xi1, yi1, xf2, yf2 = 138, 243, 154, 259
-    xi1, yi1, xf2, yf2 = 138, 249, 154, 265
+    xi1, yi1, xf2, yf2 = 138, 243+6, 154, 259+6
     while True:
         if keyboard.is_pressed('n'):
             print("N pressionado")
